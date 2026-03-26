@@ -1,0 +1,131 @@
+{% extends 'website/base.html' %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="section-heading text-center mb-5" data-aos="fade-up">
+            <span class="section-subtitle">Our Journey</span>
+            <h2>From a nurturing school to a thriving learning ecosystem</h2>
+        </div>
+        <div class="timeline">
+            {% for year, title, text in timeline_events %}
+                <div class="timeline-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}100">
+                    <div class="timeline-year">{{ year }}</div>
+                    <div class="timeline-content shadow-sm">
+                        <h5>{{ title }}</h5>
+                        <p class="mb-0">{{ text }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section-padding bg-light">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-6" data-aos="fade-right">
+                <div class="info-panel h-100">
+                    <div class="icon-wrap"><i class="fa-solid fa-bullseye"></i></div>
+                    <h3>Mission</h3>
+                    <p>To provide a safe, inclusive, and intellectually rich environment where students grow into responsible, compassionate, and future-ready learners.</p>
+                </div>
+            </div>
+            <div class="col-md-6" data-aos="fade-left">
+                <div class="info-panel h-100">
+                    <div class="icon-wrap"><i class="fa-solid fa-eye"></i></div>
+                    <h3>Vision</h3>
+                    <p>To be a leading educational institution recognised for academic innovation, ethical leadership, and holistic student development.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="section-heading text-center mb-5" data-aos="fade-up">
+            <span class="section-subtitle">Core Values</span>
+            <h2>The principles that guide our community</h2>
+        </div>
+        <div class="row g-4">
+            {% for title, icon in core_values %}
+                <div class="col-md-4 col-sm-6" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0 }}70">
+                    <div class="value-card text-center h-100">
+                        <span class="icon-wrap"><i class="fa-solid {{ icon }}"></i></span>
+                        <h5>{{ title }}</h5>
+                        <p class="mb-0">We nurture {{ title|lower }} through classroom culture, student voice, and community engagement.</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section-padding bg-light">
+    <div class="container">
+        <div class="section-heading text-center mb-5" data-aos="fade-up">
+            <span class="section-subtitle">Leadership Team</span>
+            <h2>Experienced educators and administrators</h2>
+        </div>
+        <div class="row g-4">
+            {% for leader in leadership %}
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}90">
+                    <div class="staff-card h-100 text-center">
+                        <img src="{{ leader.image_url }}" alt="{{ leader.name }}" class="staff-image mb-3">
+                        <h5>{{ leader.name }}</h5>
+                        <p class="text-warning fw-semibold mb-2">{{ leader.designation }}</p>
+                        <p class="small mb-0">{{ leader.bio }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container text-center">
+        <span class="section-subtitle">Accreditations & Affiliations</span>
+        <div class="row g-3 justify-content-center mt-3">
+            {% for item in accreditations %}
+                <div class="col-6 col-md-4 col-lg-2" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0 }}70">
+                    <div class="award-pill">{{ item }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section-padding bg-light">
+    <div class="container">
+        <div class="section-heading text-center mb-5" data-aos="fade-up">
+            <span class="section-subtitle">Infrastructure Overview</span>
+            <h2>Designed to support joyful, modern learning</h2>
+        </div>
+        <div class="row g-4">
+            {% for title, text, image in infrastructure_images %}
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}80">
+                    <div class="infrastructure-card h-100">
+                        <img src="{{ image }}" alt="{{ title }}" class="img-fluid rounded-top-4">
+                        <div class="p-4">
+                            <h4>{{ title }}</h4>
+                            <p class="mb-0">{{ text }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="stats-bar py-5">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-6 col-lg-3"><div class="counter-box"><h3 class="counter" data-target="5248">0</h3><p>Students</p></div></div>
+            <div class="col-6 col-lg-3"><div class="counter-box"><h3 class="counter" data-target="318">0</h3><p>Staff Members</p></div></div>
+            <div class="col-6 col-lg-3"><div class="counter-box"><h3 class="counter" data-target="42">0</h3><p>Smart Classrooms</p></div></div>
+            <div class="col-6 col-lg-3"><div class="counter-box"><h3 class="counter" data-target="98">0</h3><p>Parent Satisfaction %</p></div></div>
+        </div>
+    </div>
+</section>
+{% endblock %}

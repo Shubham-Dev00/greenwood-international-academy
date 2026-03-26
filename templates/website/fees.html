@@ -1,0 +1,194 @@
+{% extends 'website/base.html' %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="section-heading text-center mb-5" data-aos="fade-up">
+            <span class="section-subtitle">Fee Structure & Payments</span>
+            <h2>Transparent fee details with a smooth digital payment flow</h2>
+        </div>
+        <div class="table-responsive shadow-sm rounded-4 overflow-hidden mb-5">
+            <table class="table table-striped align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Class Level</th>
+                        <th>Tuition Fee</th>
+                        <th>Transport</th>
+                        <th>Lab Fee</th>
+                        <th>Sports Fee</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in fee_rows %}
+                        <tr>
+                            <td>{{ row.class_name }}</td>
+                            <td>₹{{ row.tuition }}</td>
+                            <td>₹{{ row.transport }}</td>
+                            <td>₹{{ row.lab_fee }}</td>
+                            <td>₹{{ row.sports_fee }}</td>
+                            <td class="fw-bold">₹{{ row.total }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-7" data-aos="fade-right">
+                <div class="form-card h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="mb-0">Online Fee Payment</h3>
+                        <span class="badge text-bg-warning">Secure Demo Flow</span>
+                    </div>
+                    <form method="post" id="feePaymentForm" novalidate>
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">{{ form.student_name.label_tag }}{{ form.student_name }}</div>
+                            <div class="col-md-6">{{ form.roll_number.label_tag }}{{ form.roll_number }}</div>
+                            <div class="col-md-6">{{ form.class_section.label_tag }}{{ form.class_section }}</div>
+                            <div class="col-md-6">{{ form.fee_type.label_tag }}{{ form.fee_type }}</div>
+                            <div class="col-md-6">{{ form.amount.label_tag }}{{ form.amount }}</div>
+                            <div class="col-12">
+                                <label class="form-label d-block mb-2">Payment Method</label>
+                                <div class="payment-methods">
+                                    {% for radio in form.payment_method %}
+                                        <div class="payment-option">
+                                            {{ radio.tag }}
+                                            <label for="{{ radio.id_for_label }}" class="form-check-label mb-0">
+                                                {{ radio.choice_label }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div id="cardFields" class="row g-3">
+                                <div class="col-md-6">{{ form.card_number.label_tag }}{{ form.card_number }}</div>
+                                <div class="col-md-6">{{ form.card_holder.label_tag }}{{ form.card_holder }}</div>
+                                <div class="col-md-6">{{ form.card_expiry.label_tag }}{{ form.card_expiry }}</div>
+                                <div class="col-md-6">{{ form.card_cvv.label_tag }}{{ form.card_cvv }}</div>
+                            </div>
+                            <div id="upiField" class="col-12">{{ form.upi_id.label_tag }}{{ form.upi_id }}</div>
+                        </div>
+                        {% for field in form %}
+                            {% if field.errors %}<div class="text-danger small mt-2">{{ field.errors|striptags }}</div>{% endif %}
+                        {% endfor %}
+                        <button type="submit" class="btn btn-accent btn-lg mt-4" id="payNowBtn">
+                            <span class="btn-text">Pay Now</span>
+                            <span class="spinner-border spinner-border-sm d-none" id="paySpinner" aria-hidden="true"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-5" data-aos="fade-left">
+                <div class="form-card h-100">
+                    <h3>Scholarship & Concession Info</h3>
+                    <ul class="list-check mt-3 mb-4">
+                        {% for item in scholarship_points %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                    <div class="receipt-preview-box">
+                        <h5 class="mb-3">Receipt Preview</h5>
+                        <p class="mb-1"><strong>Student:</strong> Aarav Khanna</p>
+                        <p class="mb-1"><strong>Class:</strong> Class 8 - C</p>
+                        <p class="mb-1"><strong>Type:</strong> Quarterly Fee</p>
+                        <p class="mb-0"><strong>Amount:</strong> ₹28,500</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-heading mt-5 mb-4" data-aos="fade-up">
+            <span class="section-subtitle">Recent Transactions</span>
+            <h2 class="mb-0">Payment History</h2>
+        </div>
+        <div class="table-responsive shadow-sm rounded-4 overflow-hidden">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Date</th>
+                        <th>Student</th>
+                        <th>Amount</th>
+                        <th>Receipt Number</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in payment_history %}
+                        <tr>
+                            <td>{{ payment.payment_date|date:"d M Y" }}</td>
+                            <td>{{ payment.student_name }}</td>
+                            <td>₹{{ payment.amount }}</td>
+                            <td>{{ payment.transaction_id }}</td>
+                            <td><span class="badge bg-success">{{ payment.status }}</span></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{% if payment_success %}
+<div class="modal fade" id="paymentSuccessModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+            <div class="modal-body p-5 text-center">
+                <div class="success-icon mx-auto mb-3"><i class="fa-solid fa-check"></i></div>
+                <h3>Payment Successful</h3>
+                <p>Your fee payment has been recorded successfully.</p>
+                <p class="mb-4"><strong>Transaction ID:</strong> {{ payment_success.transaction_id }}</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#receiptModal">View Receipt</button>
+                    <button class="btn btn-accent" data-bs-dismiss="modal">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="receiptModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-4 receipt-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Fee Receipt</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="receipt-paper">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h4 class="mb-1">Greenwood International Academy</h4>
+                            <p class="mb-0">Sector 18, Dwarka, New Delhi - 110075</p>
+                        </div>
+                        <span class="logo-mark">GIA</span>
+                    </div>
+                    <hr>
+                    <div class="row g-3 small">
+                        <div class="col-md-6"><strong>Student Name:</strong> {{ payment_success.student_name }}</div>
+                        <div class="col-md-6"><strong>Roll Number:</strong> {{ payment_success.roll_number }}</div>
+                        <div class="col-md-6"><strong>Class & Section:</strong> {{ payment_success.class_section }}</div>
+                        <div class="col-md-6"><strong>Fee Type:</strong> {{ payment_success.fee_type }}</div>
+                        <div class="col-md-6"><strong>Payment Method:</strong> {{ payment_success.get_payment_method_display }}</div>
+                        <div class="col-md-6"><strong>Receipt No.:</strong> {{ payment_success.transaction_id }}</div>
+                        <div class="col-md-6"><strong>Date:</strong> {{ payment_success.payment_date|date:"d M Y, h:i A" }}</div>
+                        <div class="col-md-6"><strong>Status:</strong> Paid</div>
+                    </div>
+                    <div class="receipt-total mt-4">Amount Received: ₹{{ payment_success.amount }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const successModalEl = document.getElementById('paymentSuccessModal');
+    if (successModalEl) new bootstrap.Modal(successModalEl).show();
+});
+</script>
+{% endblock %}

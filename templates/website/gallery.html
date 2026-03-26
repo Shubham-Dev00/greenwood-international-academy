@@ -1,0 +1,51 @@
+{% extends 'website/base.html' %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="section-heading text-center mb-5" data-aos="fade-up">
+            <span class="section-subtitle">Campus Gallery</span>
+            <h2>Moments, milestones, and everyday learning</h2>
+        </div>
+        <div class="gallery-filters d-flex flex-wrap justify-content-center gap-2 mb-4">
+            <button class="btn btn-outline-primary filter-btn active" data-filter="All">All</button>
+            <button class="btn btn-outline-primary filter-btn" data-filter="Sports">Sports</button>
+            <button class="btn btn-outline-primary filter-btn" data-filter="Events">Events</button>
+            <button class="btn btn-outline-primary filter-btn" data-filter="Classrooms">Classrooms</button>
+            <button class="btn btn-outline-primary filter-btn" data-filter="Labs">Labs</button>
+            <button class="btn btn-outline-primary filter-btn" data-filter="Cultural">Cultural</button>
+        </div>
+        <div class="gallery-grid">
+            {% for item in gallery_images %}
+                <a href="{{ item.image }}" class="gallery-item glightbox" data-gallery="campus-gallery" data-category="{{ item.category }}" data-title="{{ item.title }}">
+                    <img src="{{ item.image }}" alt="{{ item.title }}">
+                    <span class="gallery-overlay">
+                        <i class="fa-solid fa-magnifying-glass-plus"></i>
+                        <strong>{{ item.title }}</strong>
+                        <small>{{ item.category }}</small>
+                    </span>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section-padding bg-light">
+    <div class="container">
+        <div class="section-heading text-center mb-5" data-aos="fade-up">
+            <span class="section-subtitle">Video Gallery</span>
+            <h2>Explore school life in motion</h2>
+        </div>
+        <div class="row g-4">
+            {% for video in video_gallery %}
+                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}100">
+                    <div class="ratio ratio-16x9 rounded-4 overflow-hidden shadow-sm bg-dark">
+                        <iframe src="{{ video.embed }}" title="{{ video.title }}" allowfullscreen></iframe>
+                    </div>
+                    <h5 class="mt-3 mb-0">{{ video.title }}</h5>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

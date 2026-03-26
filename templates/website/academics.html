@@ -1,0 +1,96 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block content %}
+<section id="levels" class="section-padding">
+    <div class="container">
+        <div class="section-heading text-center mb-5" data-aos="fade-up">
+            <span class="section-subtitle">Class Levels</span>
+            <h2>Learning pathways from early years to senior school</h2>
+        </div>
+        <ul class="nav nav-pills justify-content-center mb-4 gap-2" id="academicsTab" role="tablist">
+            {% for level in levels %}
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {% if forloop.first %}active{% endif %}" id="{{ level.slug }}-tab" data-bs-toggle="pill" data-bs-target="#{{ level.slug }}" type="button" role="tab" aria-controls="{{ level.slug }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">{{ level.title }}</button>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="tab-content" id="academicsTabContent">
+            {% for level in levels %}
+                <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="{{ level.slug }}" role="tabpanel" aria-labelledby="{{ level.slug }}-tab">
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="card-body p-4 p-lg-5">
+                            <div class="row g-4">
+                                <div class="col-lg-5">
+                                    <span class="section-subtitle">{{ level.title }}</span>
+                                    <h3>{{ level.title }} Programme</h3>
+                                    <p>{{ level.overview }}</p>
+                                </div>
+                                <div class="col-lg-3">
+                                    <h5>Subjects</h5>
+                                    <ul class="list-check">
+                                        {% for subject in level.subjects %}
+                                            <li>{{ subject }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <div class="col-lg-4">
+                                    <h5>Key Highlights</h5>
+                                    <ul class="list-check">
+                                        {% for item in level.highlights %}
+                                            <li>{{ item }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section id="framework" class="section-padding bg-light">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6" data-aos="fade-right">
+                <img src="https://picsum.photos/seed/curriculum/1000/700" alt="Curriculum Framework" class="img-fluid rounded-4 shadow-lg">
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <span class="section-subtitle">Curriculum Framework</span>
+                <h2>Balanced, inquiry-driven, and future focused</h2>
+                <p>Our curriculum integrates conceptual understanding, subject mastery, digital fluency, communication skills, and values-based learning. Assessments include projects, presentations, practical work, and reflective feedback to support deeper growth.</p>
+                <div class="row g-3 mt-2">
+                    <div class="col-sm-6"><div class="mini-stat">Experiential Projects</div></div>
+                    <div class="col-sm-6"><div class="mini-stat">Life Skills Integration</div></div>
+                    <div class="col-sm-6"><div class="mini-stat">Career Guidance & Counselling</div></div>
+                    <div class="col-sm-6"><div class="mini-stat">STEM, Arts & Sports Balance</div></div>
+                </div>
+                <a href="{% static 'docs/academic-calendar-2024-25.pdf' %}" class="btn btn-accent mt-4" download>
+                    <i class="fa-solid fa-download me-2"></i>Download Academic Calendar
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="subjects" class="section-padding">
+    <div class="container">
+        <div class="section-heading text-center mb-5" data-aos="fade-up">
+            <span class="section-subtitle">Subjects We Offer</span>
+            <h2>Strong foundations across disciplines</h2>
+        </div>
+        <div class="row g-4">
+            {% for icon, subject in subject_icons %}
+                <div class="col-md-3 col-sm-6" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0 }}70">
+                    <div class="subject-card text-center h-100">
+                        <span class="icon-wrap"><i class="fa-solid {{ icon }}"></i></span>
+                        <h5>{{ subject }}</h5>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

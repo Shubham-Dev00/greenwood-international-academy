@@ -1,0 +1,41 @@
+{% extends 'website/base.html' %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="section-heading text-center mb-5" data-aos="fade-up">
+            <span class="section-subtitle">Meet Our Educators</span>
+            <h2>Experienced faculty shaping confident learners</h2>
+        </div>
+        <div class="row g-3 align-items-center mb-4">
+            <div class="col-lg-5">
+                <input type="search" id="facultySearch" class="form-control form-control-lg" placeholder="Search faculty by name">
+            </div>
+            <div class="col-lg-7">
+                <div class="d-flex flex-wrap gap-2 justify-content-lg-end">
+                    <button class="btn btn-outline-primary faculty-filter active" data-filter="All">All</button>
+                    <button class="btn btn-outline-primary faculty-filter" data-filter="Science">Science</button>
+                    <button class="btn btn-outline-primary faculty-filter" data-filter="Arts">Arts</button>
+                    <button class="btn btn-outline-primary faculty-filter" data-filter="Commerce">Commerce</button>
+                    <button class="btn btn-outline-primary faculty-filter" data-filter="Sports">Sports</button>
+                    <button class="btn btn-outline-primary faculty-filter" data-filter="Administration">Administration</button>
+                </div>
+            </div>
+        </div>
+        <div class="row g-4" id="facultyGrid">
+            {% for member in faculty_members %}
+                <div class="col-lg-3 col-md-6 faculty-col" data-name="{{ member.name|lower }}" data-department="{{ member.department }}" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}40">
+                    <div class="staff-card faculty-card h-100 text-center">
+                        <img src="{{ member.image_url }}" alt="{{ member.name }}" class="staff-image mb-3">
+                        <h5>{{ member.name }}</h5>
+                        <p class="text-warning fw-semibold mb-1">{{ member.designation }}</p>
+                        <p class="mb-1"><strong>Subject:</strong> {{ member.subject }}</p>
+                        <p class="mb-1"><strong>Qualification:</strong> {{ member.qualification }}</p>
+                        <p class="mb-0"><strong>Experience:</strong> {{ member.experience_years }} years</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

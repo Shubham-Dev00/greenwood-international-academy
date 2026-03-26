@@ -1,0 +1,56 @@
+{% extends 'website/base.html' %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4" data-aos="fade-up">
+            <div>
+                <span class="section-subtitle">Notification Centre</span>
+                <h2 class="mb-0">Important school updates</h2>
+            </div>
+            <button class="btn btn-accent" id="markAllReadBtn">Mark All as Read</button>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mb-4">
+            <button class="btn btn-outline-primary notify-filter active" data-filter="All">All</button>
+            <button class="btn btn-outline-primary notify-filter" data-filter="Academic">Academic</button>
+            <button class="btn btn-outline-primary notify-filter" data-filter="Events">Events</button>
+            <button class="btn btn-outline-primary notify-filter" data-filter="Fees">Fees</button>
+            <button class="btn btn-outline-primary notify-filter" data-filter="Exams">Exams</button>
+            <button class="btn btn-outline-primary notify-filter" data-filter="General">General</button>
+        </div>
+        <div class="row g-4" id="notificationsGrid">
+            {% for item in notifications %}
+                <div class="col-lg-6 notification-col" data-category="{{ item.category }}" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}50">
+                    <div class="notification-card {% if not item.is_read %}unread{% else %}read{% endif %}" tabindex="0">
+                        <div class="d-flex gap-3">
+                            <span class="notify-icon large"><i class="{{ item.icon }}"></i></span>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between flex-wrap gap-2 mb-2">
+                                    <h5 class="mb-0">{{ item.title }}</h5>
+                                    <span class="badge rounded-pill text-bg-light">{{ item.category }}</span>
+                                </div>
+                                <p class="mb-2">{{ item.description }}</p>
+                                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 small text-muted">
+                                    <span>{{ item.timestamp|date:"d M Y, h:i A" }}</span>
+                                    <button class="btn btn-sm btn-outline-secondary mark-read-btn">{% if item.is_read %}Read{% else %}Mark as Read{% endif %}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="notificationToast" class="toast border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-dark text-white">
+            <strong class="me-auto">Greenwood Alerts</strong>
+            <small>Just now</small>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">New update: Admissions counselling slots for next week are now open.</div>
+    </div>
+</div>
+{% endblock %}

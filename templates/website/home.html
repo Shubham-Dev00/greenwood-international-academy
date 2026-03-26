@@ -1,0 +1,212 @@
+{% extends 'website/base.html' %}
+
+{% block content %}
+<section class="hero-section">
+    <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            {% for slide in hero_slides %}
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" aria-label="Slide {{ forloop.counter }}"></button>
+            {% endfor %}
+        </div>
+        <div class="carousel-inner">
+            {% for slide in hero_slides %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <div class="hero-slide" style="background-image: linear-gradient(rgba(10,35,66,0.72), rgba(10,35,66,0.72)), url('{{ slide.image }}');">
+                        <div class="container">
+                            <div class="hero-content" data-aos="fade-up">
+                                <span class="hero-badge">Premier CBSE-aligned campus in New Delhi</span>
+                                <h1>{{ slide.title }}</h1>
+                                <p>{{ slide.subtitle }}</p>
+                                <div class="d-flex flex-wrap gap-3 mt-4">
+                                    <a href="{% url 'enquiry' %}" class="btn btn-accent btn-lg">Admissions Open</a>
+                                    <a href="{% url 'academics' %}" class="btn btn-outline-light btn-lg">Explore Courses</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span><span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span><span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</section>
+
+<section class="stats-bar py-4">
+    <div class="container">
+        <div class="row g-4 text-center">
+            {% for stat, label in stats %}
+                <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                    <div class="counter-box">
+                        <h3 class="counter" data-target="{{ stat|cut:'+' }}">0</h3>
+                        <p class="mb-0">{{ label }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section-padding bg-light">
+    <div class="container">
+        <div class="section-heading text-center mb-5" data-aos="fade-up">
+            <span class="section-subtitle">Featured Highlights</span>
+            <h2>Everything a future-ready learner needs</h2>
+        </div>
+        <div class="row g-4">
+            {% for icon, title, text in highlights %}
+                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0 }}100">
+                    <div class="icon-card h-100">
+                        <div class="icon-wrap"><i class="fa-solid {{ icon }}"></i></div>
+                        <h4>{{ title }}</h4>
+                        <p>{{ text }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-5" data-aos="fade-right">
+                <span class="section-subtitle">Why Choose Us</span>
+                <h2>Built around values, ambition, and student success</h2>
+                <p>Greenwood International Academy blends academic rigour with emotional wellbeing, modern infrastructure, and leadership development to create confident global citizens.</p>
+                <a href="{% url 'about' %}" class="btn btn-accent mt-3">Discover Our Story</a>
+            </div>
+            <div class="col-lg-7">
+                <div class="row g-4">
+                    {% for icon, title, text in why_choose_us %}
+                        <div class="col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}80">
+                            <div class="feature-panel h-100">
+                                <span class="icon-wrap sm"><i class="fa-solid {{ icon }}"></i></span>
+                                <h5>{{ title }}</h5>
+                                <p class="mb-0">{{ text }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding bg-light">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4" data-aos="fade-up">
+            <div>
+                <span class="section-subtitle">Latest News & Events</span>
+                <h2 class="mb-0">What’s happening on campus</h2>
+            </div>
+            <a href="{% url 'notifications' %}" class="btn btn-outline-primary">View Updates</a>
+        </div>
+        <div class="row g-4">
+            {% for item in news_items %}
+                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}100">
+                    <article class="card news-card h-100 border-0 shadow-sm">
+                        <img src="{{ item.image_url }}" class="card-img-top" alt="{{ item.title }}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge bg-warning text-dark">{{ item.category }}</span>
+                                <small class="text-muted">{{ item.event_date|date:"d M Y" }}</small>
+                            </div>
+                            <h5 class="card-title">{{ item.title }}</h5>
+                            <p class="card-text">{{ item.excerpt }}</p>
+                        </div>
+                    </article>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="ticker-section py-3">
+    <div class="container overflow-hidden">
+        <div class="ticker-track">
+            {% for text in upcoming_ticker %}
+                <span><i class="fa-solid fa-circle text-warning me-2"></i>{{ text }}</span>
+            {% endfor %}
+            {% for text in upcoming_ticker %}
+                <span><i class="fa-solid fa-circle text-warning me-2"></i>{{ text }}</span>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="section-heading text-center mb-5" data-aos="fade-up">
+            <span class="section-subtitle">Testimonials</span>
+            <h2>Trusted by students and parents</h2>
+        </div>
+        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for item in testimonials %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <div class="testimonial-card mx-auto text-center" data-aos="zoom-in">
+                            <img src="{{ item.image_url }}" alt="{{ item.name }}" class="testimonial-avatar mb-4">
+                            <p class="lead">“{{ item.quote }}”</p>
+                            <h5 class="mb-1">{{ item.name }}</h5>
+                            <span class="text-muted">{{ item.role }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="text-center mt-4">
+                <button class="btn btn-outline-primary btn-sm me-2" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">Previous</button>
+                <button class="btn btn-outline-primary btn-sm" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">Next</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding bg-light principal-section">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-5" data-aos="fade-right">
+                <img src="{{ principal.image_url }}" alt="{{ principal.name }}" class="img-fluid rounded-4 shadow-lg">
+            </div>
+            <div class="col-lg-7" data-aos="fade-left">
+                <span class="section-subtitle">Principal’s Message</span>
+                <h2>A school culture built on excellence and care</h2>
+                <blockquote class="styled-quote">“At Greenwood, we believe every child deserves an environment that challenges the mind, nurtures character, and inspires purpose.”</blockquote>
+                <p>{{ principal.bio }}</p>
+                <div class="d-flex align-items-center gap-3 mt-4">
+                    <div>
+                        <h5 class="mb-0">{{ principal.name }}</h5>
+                        <small class="text-muted">{{ principal.designation }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="awards-strip py-5">
+    <div class="container text-center">
+        <span class="section-subtitle">Achievements & Awards</span>
+        <div class="row g-3 justify-content-center mt-3">
+            {% for item in achievements %}
+                <div class="col-6 col-md-4 col-lg-2" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0 }}80">
+                    <div class="award-pill">{{ item }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="footer-cta py-5 text-center">
+    <div class="container" data-aos="zoom-in">
+        <span class="section-subtitle text-warning">Admissions 2024-25</span>
+        <h2 class="text-white">Start Your Journey Today</h2>
+        <p class="text-white-50 mb-4">Take the next step toward a joyful, future-ready school experience.</p>
+        <a href="{% url 'enquiry' %}" class="btn btn-accent btn-lg">Enroll Now</a>
+    </div>
+</section>
+{% endblock %}

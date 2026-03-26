@@ -1,0 +1,71 @@
+{% extends 'website/base.html' %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="section-heading text-center mb-5" data-aos="fade-up">
+            <span class="section-subtitle">School at a Glance</span>
+            <h2>Performance, demographics, and growth insights</h2>
+        </div>
+        <div class="row g-4 mb-4">
+            {% for title, value, icon in metric_summary %}
+                <div class="col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}80">
+                    <div class="metric-card h-100">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted mb-2">{{ title }}</p>
+                                <h3 class="mb-0">{{ value }}</h3>
+                            </div>
+                            <span class="metric-icon"><i class="fa-solid {{ icon }}"></i></span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-6"><div class="chart-card"><h5>Student Enrollment by Year</h5><canvas id="enrollmentChart"></canvas></div></div>
+            <div class="col-lg-6"><div class="chart-card"><h5>Academic Performance Trends</h5><canvas id="performanceChart"></canvas></div></div>
+            <div class="col-lg-6"><div class="chart-card"><h5>Students by Class Level</h5><canvas id="levelsChart"></canvas></div></div>
+            <div class="col-lg-6"><div class="chart-card"><h5>Gender Distribution</h5><canvas id="genderChart"></canvas></div></div>
+            <div class="col-12"><div class="chart-card"><h5>Department Strength Comparison</h5><canvas id="departmentChart"></canvas></div></div>
+        </div>
+    </div>
+</section>
+{{ chart_data|json_script:'chart-data' }}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const chartData = JSON.parse(document.getElementById('chart-data').textContent);
+function createChart(id, config) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    new Chart(el, config);
+}
+createChart('enrollmentChart', {
+    type: 'bar',
+    data: { labels: chartData.enrollment.labels, datasets: [{ label: 'Students', data: chartData.enrollment.data, borderWidth: 1, borderRadius: 8 }] },
+    options: { responsive: true, animation: { duration: 1400 }, plugins: { legend: { display: true }, tooltip: { enabled: true } } }
+});
+createChart('performanceChart', {
+    type: 'line',
+    data: { labels: chartData.performance.labels, datasets: [{ label: 'Pass %', data: chartData.performance.data, tension: 0.35, fill: false }] },
+    options: { responsive: true, animation: { duration: 1400 }, plugins: { legend: { display: true }, tooltip: { enabled: true } } }
+});
+createChart('levelsChart', {
+    type: 'doughnut',
+    data: { labels: chartData.levels.labels, datasets: [{ label: 'Students', data: chartData.levels.data }] },
+    options: { responsive: true, animation: { duration: 1400 }, plugins: { legend: { position: 'bottom' }, tooltip: { enabled: true } } }
+});
+createChart('genderChart', {
+    type: 'pie',
+    data: { labels: chartData.gender.labels, datasets: [{ label: 'Students', data: chartData.gender.data }] },
+    options: { responsive: true, animation: { duration: 1400 }, plugins: { legend: { position: 'bottom' }, tooltip: { enabled: true } } }
+});
+createChart('departmentChart', {
+    type: 'radar',
+    data: { labels: chartData.departments.labels, datasets: [{ label: 'Faculty Strength', data: chartData.departments.data, fill: true }] },
+    options: { responsive: true, animation: { duration: 1400 }, plugins: { legend: { display: true }, tooltip: { enabled: true } } }
+});
+</script>
+{% endblock %}

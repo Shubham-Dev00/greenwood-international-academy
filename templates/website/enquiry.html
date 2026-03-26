@@ -1,0 +1,153 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-7" data-aos="fade-right">
+                <div class="form-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                        <h3 class="mb-0">Admission Enquiry Form</h3>
+                        <a href="{% static 'docs/gia-prospectus-2024-25.pdf' %}" class="btn btn-outline-primary" download>
+                            <i class="fa-solid fa-download me-2"></i>Download Prospectus
+                        </a>
+                    </div>
+
+                    <div class="progress mb-4" role="progressbar" aria-label="Admission form progress">
+                        <div id="enquiryProgress" class="progress-bar bg-warning text-dark" style="width: 33%">Step 1 of 3</div>
+                    </div>
+
+                    <form method="post" id="admissionForm" novalidate>
+                        {% csrf_token %}
+
+                        <div class="form-step active" data-step="1">
+                            <h5 class="mb-3">Step 1 — Student Info</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">{{ form.student_name.label_tag }}{{ form.student_name }}</div>
+                                <div class="col-md-6">{{ form.dob.label_tag }}{{ form.dob }}</div>
+                                <div class="col-md-6">{{ form.gender.label_tag }}{{ form.gender }}</div>
+                                <div class="col-md-6">{{ form.nationality.label_tag }}{{ form.nationality }}</div>
+                                <div class="col-md-6">{{ form.applying_class.label_tag }}{{ form.applying_class }}</div>
+                                <div class="col-md-6">{{ form.medium.label_tag }}{{ form.medium }}</div>
+                            </div>
+                        </div>
+
+                        <div class="form-step" data-step="2">
+                            <h5 class="mb-3">Step 2 — Parent / Guardian Info</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">{{ form.father_name.label_tag }}{{ form.father_name }}</div>
+                                <div class="col-md-6">{{ form.mother_name.label_tag }}{{ form.mother_name }}</div>
+                                <div class="col-md-6">{{ form.occupation.label_tag }}{{ form.occupation }}</div>
+                                <div class="col-md-6">{{ form.income.label_tag }}{{ form.income }}</div>
+                                <div class="col-md-6">{{ form.contact.label_tag }}{{ form.contact }}</div>
+                                <div class="col-md-6">{{ form.email.label_tag }}{{ form.email }}</div>
+                                <div class="col-12">{{ form.address.label_tag }}{{ form.address }}</div>
+                            </div>
+                        </div>
+
+                        <div class="form-step" data-step="3">
+                            <h5 class="mb-3">Step 3 — Documents &amp; Submit</h5>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label d-block mb-2">Documents Available</label>
+                                    <div class="choice-grid">
+                                        {% for checkbox in form.documents %}
+                                            <div class="choice-card">
+                                                {{ checkbox.tag }}
+                                                <label for="{{ checkbox.id_for_label }}" class="mb-0">
+                                                    {{ checkbox.choice_label }}
+                                                </label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">{{ form.referral_source.label_tag }}{{ form.referral_source }}</div>
+                                <div class="col-md-6">{{ form.preferred_session.label_tag }}{{ form.preferred_session }}</div>
+                                <div class="col-12">{{ form.special_requirements.label_tag }}{{ form.special_requirements }}</div>
+
+                                <div class="col-12">
+                                    <div class="declaration-card">
+                                        {{ form.declaration }}
+                                        <label for="{{ form.declaration.id_for_label }}" class="mb-0">
+                                            {{ form.declaration.label }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4 gap-3">
+                            <button type="button" class="btn btn-outline-secondary d-none" id="prevStepBtn">Previous</button>
+                            <button type="button" class="btn btn-accent ms-auto" id="nextStepBtn">Next</button>
+                            <button type="submit" class="btn btn-accent d-none" id="submitEnquiryBtn">Submit Enquiry</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-lg-5" data-aos="fade-left">
+                <div class="form-card mb-4">
+                    <span class="section-subtitle">Admission Process</span>
+                    <h3>Simple, parent-friendly onboarding</h3>
+
+                    <div class="process-steps mt-4">
+                        {% for number, icon, text in admission_steps %}
+                            <div class="process-step">
+                                <span class="step-number">{{ number }}</span>
+                                <div>
+                                    <h6><i class="fa-solid {{ icon }} me-2 text-warning"></i>Step {{ number }}</h6>
+                                    <p class="mb-0">{{ text }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="form-card">
+                    <span class="section-subtitle">Important Dates</span>
+                    <h3>Admission Schedule</h3>
+
+                    <div class="table-responsive mt-3">
+                        <table class="table align-middle mb-0">
+                            <tbody>
+                                {% for date, event in important_dates %}
+                                    <tr>
+                                        <td class="fw-semibold">{{ date }}</td>
+                                        <td>{{ event }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% if enquiry_success %}
+<div class="modal fade" id="enquiryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+            <div class="modal-body p-5 text-center">
+                <div class="success-icon mx-auto mb-3"><i class="fa-solid fa-check"></i></div>
+                <h3>Enquiry Submitted</h3>
+                <p>Thank you for your interest in Greenwood International Academy.</p>
+                <p class="mb-4"><strong>Reference Number:</strong> {{ enquiry_success.reference_number }}</p>
+                <button class="btn btn-accent" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const modalEl = document.getElementById('enquiryModal');
+    if (modalEl) new bootstrap.Modal(modalEl).show();
+});
+</script>
+{% endblock %}

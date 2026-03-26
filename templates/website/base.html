@@ -1,0 +1,221 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{{ page_title|default:"Greenwood International Academy" }} | Greenwood International Academy{% endblock %}</title>
+    <meta name="description" content="{{ meta_description|default:'Greenwood International Academy - Premium school website demo built with Django.' }}">
+    <meta property="og:title" content="{{ page_title|default:'Greenwood International Academy' }}">
+    <meta property="og:description" content="{{ meta_description|default:'Explore Greenwood International Academy admissions, academics, faculty, fees, and campus life.' }}">
+    <meta property="og:image" content="https://picsum.photos/seed/greenwood-og/1200/630">
+    <link rel="icon" type="image/png" href="https://picsum.photos/seed/giafavicon/64/64">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+<body data-bs-spy="scroll" data-bs-target="#mainNavbar" data-bs-offset="120" tabindex="0">
+    <div id="loading-screen" aria-label="Loading website">
+        <div class="spinner-border text-warning" role="status" aria-hidden="true"></div>
+        <p class="mt-3 mb-0 text-white fw-semibold">Loading Greenwood International Academy...</p>
+    </div>
+
+    <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <header>
+        <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center gap-3" href="{% url 'home' %}">
+                    <span class="logo-mark">GIA</span>
+                    <span>
+                        <strong class="d-block">Greenwood International Academy</strong>
+                        <small class="text-white-50">Excellence • Character • Future Ready</small>
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+                        <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">About</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'academics' %}active{% endif %}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Academics</a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{% url 'academics' %}#levels">Class Levels</a></li>
+                                <li><a class="dropdown-item" href="{% url 'academics' %}#framework">Curriculum Framework</a></li>
+                                <li><a class="dropdown-item" href="{% url 'academics' %}#subjects">Subjects</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'gallery' %}active{% endif %}" href="{% url 'gallery' %}">Gallery</a></li>
+                        <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'stats' %}active{% endif %}" href="{% url 'stats' %}">Stats</a></li>
+                        <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'fees' %}active{% endif %}" href="{% url 'fees' %}">Fee Payment</a></li>
+                        <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'faculty' %}active{% endif %}" href="{% url 'faculty' %}">Faculty</a></li>
+                        <li class="nav-item dropdown notification-menu">
+                            <a class="nav-link position-relative {% if request.resolver_match.url_name == 'notifications' %}active{% endif %}" href="#" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Notifications">
+                                <i class="fa-regular fa-bell fs-5"></i>
+                                <span class="notification-badge">{{ unread_count }}</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end p-0 notification-dropdown shadow border-0">
+                                <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+                                    <strong>Recent Notifications</strong>
+                                    <a href="{% url 'notifications' %}" class="small text-decoration-none">View All</a>
+                                </div>
+                                {% for item in recent_notifications %}
+                                    <a href="{% url 'notifications' %}" class="dropdown-item py-3 border-bottom">
+                                        <div class="d-flex gap-3 align-items-start">
+                                            <span class="notify-icon"><i class="{{ item.icon }}"></i></span>
+                                            <div>
+                                                <h6 class="mb-1 small fw-bold">{{ item.title }}</h6>
+                                                <p class="mb-0 small text-muted">{{ item.timestamp|timesince }} ago</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                {% empty %}
+                                    <div class="p-3 text-muted small">No notifications yet.</div>
+                                {% endfor %}
+                            </div>
+                        </li>
+                        <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'enquiry' %}active{% endif %}" href="{% url 'enquiry' %}">Enquiry</a></li>
+                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0"><a class="btn btn-accent px-4" href="{% url 'enquiry' %}">Enroll Now</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="site-main">
+        {% if request.resolver_match.url_name != 'home' %}
+            <section class="page-hero-sm">
+                <div class="container">
+                    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+                        <div>
+                            <h1 class="mb-2">{{ page_title }}</h1>
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb mb-0">
+                                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
+                                </ol>
+                            </nav>
+                        </div>
+                        <div class="page-hero-icon"><i class="fa-solid fa-school"></i></div>
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+
+        {% if messages %}
+            <div class="container pt-4">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <section class="timings-strip text-center py-3">
+        <div class="container d-flex flex-column flex-md-row justify-content-center gap-3 small fw-semibold">
+            <span><i class="fa-regular fa-clock me-2"></i>School Timings: 7:45 AM - 2:15 PM</span>
+            <span><i class="fa-solid fa-bus me-2"></i>Transport Desk: 7:00 AM - 6:30 PM</span>
+            <span><i class="fa-solid fa-calendar-check me-2"></i>Admissions Office: Mon-Sat, 9:00 AM - 4:00 PM</span>
+        </div>
+    </section>
+
+    <footer class="site-footer pt-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand mb-3 d-flex align-items-center gap-3">
+                        <span class="logo-mark">GIA</span>
+                        <div>
+                            <h5 class="mb-0 text-white">Greenwood International Academy</h5>
+                            <small>Inspiring excellence with values and vision.</small>
+                        </div>
+                    </div>
+                    <p class="footer-text">A future-ready institution in New Delhi committed to academic excellence, leadership, wellbeing, and all-round development.</p>
+                    <div class="social-icons d-flex gap-2">
+                        <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="footer-title">Quick Links</h6>
+                    <ul class="footer-links list-unstyled">
+                        <li><a href="{% url 'about' %}">About Us</a></li>
+                        <li><a href="{% url 'gallery' %}">Campus Gallery</a></li>
+                        <li><a href="{% url 'faculty' %}">Faculty</a></li>
+                        <li><a href="{% url 'notifications' %}">Notifications</a></li>
+                        <li><a href="{% url 'contact' %}">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="footer-title">Academics</h6>
+                    <ul class="footer-links list-unstyled">
+                        <li><a href="{% url 'academics' %}">Pre-Primary</a></li>
+                        <li><a href="{% url 'academics' %}">Primary</a></li>
+                        <li><a href="{% url 'academics' %}">Middle School</a></li>
+                        <li><a href="{% url 'academics' %}">Senior Secondary</a></li>
+                        <li><a href="{% url 'stats' %}">School at a Glance</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="footer-title">Contact Info</h6>
+                    <ul class="footer-links list-unstyled footer-contact">
+                        <li><i class="fa-solid fa-location-dot"></i> Sector 18, Dwarka, New Delhi - 110075</li>
+                        <li><i class="fa-solid fa-phone"></i> +91 11 4655 2100</li>
+                        <li><i class="fa-solid fa-envelope"></i> info@gia.edu.in</li>
+                    </ul>
+                    <form class="newsletter-form mt-3">
+                        <label class="form-label text-white" for="newsletterEmail">Newsletter</label>
+                        <div class="input-group">
+                            <input id="newsletterEmail" type="email" class="form-control" placeholder="Your email address" aria-label="Email for newsletter">
+                            <button class="btn btn-accent" type="button">Join</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom mt-5 py-3">
+            <div class="container d-flex flex-column flex-md-row justify-content-between gap-2 small">
+                <span>© {% now "Y" %} Greenwood International Academy. All rights reserved.</span>
+                <div class="d-flex gap-3">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms</a>
+                    <a href="#">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="cookieBanner" class="cookie-banner shadow-lg">
+        <div class="d-flex flex-column flex-lg-row gap-3 align-items-lg-center justify-content-between">
+            <p class="mb-0">We use cookies to improve performance, personalise content, and enhance your browsing experience.</p>
+            <button id="acceptCookies" class="btn btn-accent btn-sm">Accept & Continue</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
