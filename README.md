@@ -6,8 +6,6 @@ This project is designed for **Greenwood International Academy** and includes bo
 
 ---
 
-## Live Demo
-Github Page: https://shubham-dev00.github.io/greenwood-international-academy/
 
 ## Live Project Overview
 
